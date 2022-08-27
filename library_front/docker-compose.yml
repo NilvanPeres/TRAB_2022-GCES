@@ -1,0 +1,19 @@
+version: '3'
+services:
+  frontend:
+        container_name: react_front
+        build:
+            context: .
+            dockerfile: Dockerfile    
+        volumes:
+          - '.:/app'
+        ports:
+          - '3000:3000'
+        tty: true
+        stdin_open: true
+        networks:
+          - network-api 
+      
+networks:
+  network-api:
+    driver: bridge
