@@ -11,7 +11,33 @@ services:
       - .env
     ports: 
       - 5432:5432
+    networks:
+      - network-api
+
+  backend-api:
+    depends_on:
+      - database
+    build: 
+      context: .
+      dockerfile: Dockerfile
+
+    entrypoint: bash -c " 
+        python3 manage.py makemigrations &&
+        python3 manage.py migrate &&
+        python3 manage.py runserver 0.0.0.0:8000"
+
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/code
+    networks:
+      - network-api
 
   
 volumes:
   postgres_data:
+
+networks:
+  network-api:
+    driver: bridge
+    name: network-api
