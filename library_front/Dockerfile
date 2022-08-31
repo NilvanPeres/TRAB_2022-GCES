@@ -1,4 +1,4 @@
-FROM node:16.17.0
+FROM node:16.17.0-alpine as builder
 
 RUN mkdir -p /app
 
@@ -12,9 +12,13 @@ COPY package-lock.json /app
 
 RUN npm install --silent
 
+COPY . .
 
-ADD . .
+RUN npm run build
 
-CMD ["npm","start"]
+FROM nginx:1.15
+COPY --from=builder /app/build/ /usr/share/nginx/html
 
-EXPOSE 3000
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
+CMD ["nginx", "-g", "daemon off;"]
