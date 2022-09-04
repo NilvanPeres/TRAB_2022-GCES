@@ -1,0 +1,84 @@
+name: backend-CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    name: Build backend
+    runs-on: ubuntu-latest
+    env: 
+      working-directory: ./library_back
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          python3 -m venv env
+          . env/bin/activate
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name:  Packing DB migrations
+        working-directory: ${{env.working-directory}}
+        run: docker-compose run backend-api bash -c "python3 manage.py makemigrations"
+      - name: Applying DB migrations
+        working-directory: ${{env.working-directory}}
+        run: docker-compose run backend-api bash -c "python3 manage.py migrate"
+      - name: Container up 
+        run: docker-compose up --build -d
+        working-directory: ${{env.working-directory}}
+
+  test:
+    name: Test backend
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./library_back
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Execute test
+        working-directory: ${{env.working-directory}}
+        run: docker-compose run -c backend-api "python3 manage.py test"
+          
+
+  lint:
+    name: Lint backend
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./library_back
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Download and execute flake8
+        working-directory: ${{env.working-directory}}
+        run: |
+          docker-compose run -c backend-api bash -c "pip install flake8"
+          docker-compose run -c backend-api bash -c "flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --select=E9,F63,F7,F82 --exclude=*.pyc,*migrations* --show-source --statistics"
+          docker-compose run -c backend-api bash -c "flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --max-complexity=10 --max-line-length=226 --exclude=*.pyc,*migrations* --statistics"
+      - name: Download and execute lint
+        working-directory: ${{env.working-directory}}
+        run: |
+          docker-compose run -c backend-api bash -c "pip install pylint && pylint ./library_back/src --exit-zero"
+
+    
