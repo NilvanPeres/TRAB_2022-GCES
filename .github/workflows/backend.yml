@@ -27,8 +27,8 @@ jobs:
       - name: Install Dependencies
         working-directory: ${{env.working-directory}}
         run: |
-          python3 -m pip3 install --upgrade pip3
-          pip3 install -r  ./library_back/requirements.txt
+          python3 -m pip install --upgrade pip
+          pip install -r  ./library_back/requirements.txt
       - name:  Packing DB migrations
         working-directory: ${{env.working-directory}}
         run: docker-compose run backend-api bash -c "python3 manage.py makemigrations"
