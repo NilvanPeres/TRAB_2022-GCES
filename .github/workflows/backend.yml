@@ -24,17 +24,6 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        working-directory: ${{env.working-directory}}
-        run: |
-          python3 -m pip install --upgrade pip
-          pip3 install -r requirements.txt
-      - name:  Packing DB migrations
-        working-directory: ${{env.working-directory}}
-        run: docker-compose run backend-api bash -c "python3 manage.py makemigrations"
-      - name: Applying DB migrations
-        working-directory: ${{env.working-directory}}
-        run: docker-compose run backend-api bash -c "python3 manage.py migrate"
       - name: Container up 
         run: docker-compose up --build -d
         working-directory: ${{env.working-directory}}
