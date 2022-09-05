@@ -48,3 +48,5 @@ jobs:
       - name: Execute test
         working-directory: ./library_front
         run: npm run test --if-present
+        env:
+          CI: false
