@@ -17,7 +17,7 @@ jobs:
          working-directory: ./library_front
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
         
@@ -46,4 +46,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Execute test
-        run: npm run test
+        run: npm run test --if-present
+        env:
+          CI: false
