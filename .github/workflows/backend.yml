@@ -42,7 +42,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Execute test
         working-directory: ./library_back
-        run: docker-compose run backend-api bash -c "python3 manage.py test"
+        run: python3 manage.py test
           
 
   lint:
@@ -61,11 +61,13 @@ jobs:
       - name: Download and execute flake8
         working-directory: ./library_back
         run: |
-          docker-compose run backend-api bash -c "pip install flake8"
-          docker-compose run backend-api bash -c "flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --select=E9,F63,F7,F82 --exclude=*.pyc,*migrations* --show-source --statistics"
-          docker-compose run backend-api bash -c "flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --max-complexity=10 --max-line-length=226 --exclude=*.pyc,*migrations* --statistics"
+          pip install flake8
+          flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --select=E9,F63,F7,F82 --exclude=*.pyc,*migrations* --show-source --statistics
+          flake8 --extend-ignore=E302,E101,E131,W191,W293,W292,W291 --count --max-complexity=10 --max-line-length=226 --exclude=*.pyc,*migrations* --statistics
       - name: Download and execute lint
         working-directory: ./library_back
-        run: docker-compose run backend-api bash -c "pip install pylint && pylint ./library_back/src --exit-zero"
+        run: |
+          pip install pylint
+          pylint ./library_back/src --exit-zero
 
     
