@@ -41,7 +41,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Execute test
         working-directory: ./library_back
-        run: docker run test
+        run: docker run tests
           
 
   lint:
