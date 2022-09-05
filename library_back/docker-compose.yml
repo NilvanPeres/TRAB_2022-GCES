@@ -32,6 +32,10 @@ services:
       - .:/code
     networks:
       - network-api
+  
+  tests:
+    entrypoint: bash -c " 
+        python3 manage.py test"
 
   
 volumes:
