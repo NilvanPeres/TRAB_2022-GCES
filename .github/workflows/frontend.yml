@@ -29,7 +29,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Container up
         working-directory: ./library_front
-        run: docker-compose up --build -d
+        run: |
+          npm install
+          docker-compose up --build -d
       
 
 
