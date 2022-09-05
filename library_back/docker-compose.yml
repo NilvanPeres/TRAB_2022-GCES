@@ -33,13 +33,6 @@ services:
     networks:
       - network-api
   
-  tests:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    entrypoint: bash -c " 
-        python3 manage.py test"
-
   
 volumes:
   postgres_data:
