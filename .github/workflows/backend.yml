@@ -41,7 +41,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Execute test
         working-directory: ./library_back
-        run: docker exec library_back_backend-api_1 bash -c "python3 manage.py test"   
+        run: docker-compose run backend-api bash -c "python3 manage.py test"   
 
   lint:
     name: Lint backend
