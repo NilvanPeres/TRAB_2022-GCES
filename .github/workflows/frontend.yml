@@ -50,7 +50,6 @@ jobs:
       - name: Execute test
         working-directory: ./library_front
         run: |
-          npm install
-          npm run test
+          npm run lint
         env:
           CI: false
