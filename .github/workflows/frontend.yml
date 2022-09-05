@@ -12,7 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-      
+    defaults:
+       run:
+         working-directory: ./library_front/
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
@@ -26,7 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: /library_front/package-lock.json
+          cache-dependency-path: ./library_front/package-lock.json
       - name: Container up
         working-directory: ./library_front
         run: docker-compose up --build -d
@@ -43,7 +45,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: /library_front/package-lock.json
+          cache-dependency-path: ./library_front/package-lock.json
       - name: Execute test
         working-directory: ./library_front
         run: npm run test
