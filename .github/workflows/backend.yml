@@ -31,7 +31,7 @@ jobs:
   test:
     name: Test backend
     runs-on: ubuntu-latest
-   
+    container: backend-api
     
     steps:
       - uses: actions/checkout@v3
@@ -48,6 +48,7 @@ jobs:
   lint:
     name: Lint backend
     runs-on: ubuntu-latest
+    container: backend-api
     env:
       working-directory: ./library_back
     steps:
